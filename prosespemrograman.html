@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proses Pemrograman - Multimedia Interaktif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease-out;
+        }
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .slide-in-right {
+            animation: slideInRight 0.8s ease-out;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .bounce-in {
+            animation: bounceIn 1s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .process-card {
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .process-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .process-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .process-card:hover::before {
+            left: 100%;
+        }
+        .step-indicator {
+            position: relative;
+        }
+        .step-indicator::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            width: 0;
+            height: 0;
+            border-left: 15px solid;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            transform: translateY(-50%);
+        }
+        .step-1::after { border-left-color: #ef4444; }
+        .step-2::after { border-left-color: #3b82f6; }
+        .step-3::after { border-left-color: #10b981; }
+        .step-4::after { border-left-color: #8b5cf6; }
+        .triangle-visual {
+            transition: all 0.5s ease;
+        }
+        .code-highlight {
+            background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
+            border-left: 4px solid #3b82f6;
+        }
+        .interactive-demo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .quiz-option {
+            transition: all 0.3s ease;
+        }
+        .quiz-option:hover {
+            background-color: #dbeafe;
+            border-color: #3b82f6;
+            transform: translateX(5px);
+        }
+        .quiz-option.selected {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #1d4ed8;
+        }
+        .quiz-option.correct {
+            background-color: #10b981;
+            color: white;
+            border-color: #059669;
+        }
+        .quiz-option.incorrect {
+            background-color: #ef4444;
+            color: white;
+            border-color: #dc2626;
+        }
+        .progress-ring {
+            transition: stroke-dasharray 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white py-8 shadow-2xl">
+        <div class="container mx-auto px-6">
+            <div class="text-center fade-in">
+                <h1 class="text-5xl font-bold mb-4">🔄 Proses Pemrograman</h1>
+                <p class="text-xl text-indigo-100">Memahami Siklus Pengembangan Program dari Analisis hingga Testing</p>
+                <div class="mt-6 flex justify-center space-x-4">
+                    <div class="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
+                        <span class="font-semibold">4 Tahap Utama</span>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
+                        <span class="font-semibold">Studi Kasus Interaktif</span>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
+                        <span class="font-semibold">Kuis HOTS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-200">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-center space-x-2 py-4">
+                <button onclick="showSection('konsep')" class="nav-btn px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105">
+                    📖 Konsep Dasar
+                </button>
+                <button onclick="showSection('tahapan')" class="nav-btn px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105">
+                    🔄 4 Tahapan
+                </button>
+                <button onclick="showSection('studi-kasus')" class="nav-btn px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105">
+                    💡 Studi Kasus
+                </button>
+                <button onclick="showSection('kuis')" class="nav-btn px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105">
+                    🎯 Kuis HOTS
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Konsep Dasar Section -->
+        <section id="konsep" class="section-content">
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 fade-in">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4 bounce-in">
+                        <span class="text-3xl">📖</span>
+                    </div>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">Konsep Dasar Proses Pemrograman</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        Pemrograman bukan hanya tentang menulis kode, tetapi tentang proses sistematis untuk menyelesaikan masalah
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                    <div class="slide-in-left">
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 rounded-xl border border-blue-200">
+                            <h3 class="text-2xl font-bold text-blue-800 mb-4 flex items-center">
+                                <span class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm mr-3">?</span>
+                                Apa itu Proses Pemrograman?
+                            </h3>
+                            <p class="text-gray-700 leading-relaxed mb-4">
+                                Proses pemrograman adalah metodologi terstruktur yang digunakan untuk mengembangkan solusi perangkat lunak. 
+                                Ini melibatkan serangkaian tahapan yang saling terkait untuk memastikan bahwa program yang dihasilkan 
+                                dapat menyelesaikan masalah dengan efektif dan efisien.
+                            </p>
+                            <div class="bg-white p-4 rounded-lg border-l-4 border-blue-500">
+                                <h4 class="font-semibold text-gray-800 mb-2">🎯 Tujuan Utama:</h4>
+                                <ul class="text-gray-700 space-y-1 text-sm">
+                                    <li>• Menghasilkan solusi yang tepat dan akurat</li>
+                                    <li>• Meminimalkan kesalahan dalam pengembangan</li>
+                                    <li>• Memastikan kualitas dan maintainability kode</li>
+                                    <li>• Mengoptimalkan waktu dan sumber daya</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slide-in-right">
+                        <div class="bg-gradient-to-br from-purple-50 to-pink-100 p-6 rounded-xl border border-purple-200">
+                            <h3 class="text-2xl font-bold text-purple-800 mb-4 flex items-center">
+                                <span class="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm mr-3">⚡</span>
+                                Mengapa Penting?
+                            </h3>
+                            <div class="space-y-4">
+                                <div class="flex items-start space-x-3">
+                                    <div class="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mt-1">✓</div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Mengurangi Kompleksitas</h4>
+                                        <p class="text-gray-600 text-sm">Memecah masalah besar menjadi bagian-bagian yang lebih mudah dikelola</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-3">
+                                    <div class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mt-1">✓</div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Meningkatkan Kualitas</h4>
+                                        <p class="text-gray-600 text-sm">Setiap tahap memiliki validasi untuk memastikan kualitas output</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-3">
+                                    <div class="bg-purple-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mt-1">✓</div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Memudahkan Kolaborasi</h4>
+                                        <p class="text-gray-600 text-sm">Tim dapat bekerja sama dengan pemahaman yang sama</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Siklus Pemrograman Visual -->
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 p-8 rounded-xl mb-8">
+                    <h3 class="text-2xl font-bold text-center text-gray-800 mb-8">🔄 Siklus Proses Pemrograman</h3>
+                    <div class="flex justify-center">
+                        <div class="relative">
+                            <!-- Circular Process Diagram -->
+                            <svg width="400" height="400" viewBox="0 0 400 400" class="mx-auto">
+                                <!-- Background Circle -->
+                                <circle cx="200" cy="200" r="180" fill="none" stroke="#e5e7eb" stroke-width="2" stroke-dasharray="5,5"/>
+                                
+                                <!-- Process Steps -->
+                                <!-- Analyzing -->
+                                <g class="cursor-pointer" onclick="highlightStep(1)">
+                                    <circle cx="200" cy="50" r="40" fill="#ef4444" class="transition-all duration-300 hover:r-45"/>
+                                    <text x="200" y="45" text-anchor="middle" fill="white" font-size="12" font-weight="bold">ANALISIS</text>
+                                    <text x="200" y="58" text-anchor="middle" fill="white" font-size="10">Problem</text>
+                                </g>
+                                
+                                <!-- Problem Solving -->
+                                <g class="cursor-pointer" onclick="highlightStep(2)">
+                                    <circle cx="350" cy="200" r="40" fill="#3b82f6" class="transition-all duration-300 hover:r-45"/>
+                                    <text x="350" y="195" text-anchor="middle" fill="white" font-size="12" font-weight="bold">DESAIN</text>
+                                    <text x="350" y="208" text-anchor="middle" fill="white" font-size="10">Algorithm</text>
+                                </g>
+                                
+                                <!-- Coding -->
+                                <g class="cursor-pointer" onclick="highlightStep(3)">
+                                    <circle cx="200" cy="350" r="40" fill="#10b981" class="transition-all duration-300 hover:r-45"/>
+                                    <text x="200" y="345" text-anchor="middle" fill="white" font-size="12" font-weight="bold">CODING</text>
+                                    <text x="200" y="358" text-anchor="middle" fill="white" font-size="10">Program</text>
+                                </g>
+                                
+                                <!-- Testing -->
+                                <g class="cursor-pointer" onclick="highlightStep(4)">
+                                    <circle cx="50" cy="200" r="40" fill="#8b5cf6" class="transition-all duration-300 hover:r-45"/>
+                                    <text x="50" y="195" text-anchor="middle" fill="white" font-size="12" font-weight="bold">TESTING</text>
+                                    <text x="50" y="208" text-anchor="middle" fill="white" font-size="10">Validation</text>
+                                </g>
+                                
+                                <!-- Arrows -->
+                                <defs>
+                                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                        <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+                                    </marker>
+                                </defs>
+                                
+                                <!-- Arrow 1 to 2 -->
+                                <path d="M 235 85 Q 320 120 315 165" fill="none" stroke="#6b7280" stroke-width="3" marker-end="url(#arrowhead)"/>
+                                <!-- Arrow 2 to 3 -->
+                                <path d="M 315 235 Q 320 280 235 315" fill="none" stroke="#6b7280" stroke-width="3" marker-end="url(#arrowhead)"/>
+                                <!-- Arrow 3 to 4 -->
+                                <path d="M 165 315 Q 80 280 85 235" fill="none" stroke="#6b7280" stroke-width="3" marker-end="url(#arrowhead)"/>
+                                <!-- Arrow 4 to 1 -->
+                                <path d="M 85 165 Q 80 120 165 85" fill="none" stroke="#6b7280" stroke-width="3" marker-end="url(#arrowhead)"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-center text-gray-600 mt-4 italic">Klik pada setiap tahap untuk melihat penjelasan detail</p>
+                </div>
+
+                <!-- Step Details -->
+                <div id="step-details" class="bg-white p-6 rounded-xl border-2 border-gray-200 text-center text-gray-500">
+                    <div class="text-4xl mb-4">👆</div>
+                    <p>Klik pada salah satu tahap di diagram untuk melihat penjelasan detail</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4 Tahapan Section -->
+        <section id="tahapan" class="section-content hidden">
+            <div class="space-y-8">
+                <!-- Tahap 1: Analyzing -->
+                <div class="process-card bg-white rounded-2xl shadow-xl overflow-hidden fade-in">
+                    <div class="bg-gradient-to-r from-red-500 to-pink-600 p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="step-indicator step-1 bg-white/20 backdrop-blur-sm rounded-full w-16 h-16 flex items-center justify-center">
+                                    <span class="text-2xl font-bold">1</span>
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl font-bold">🔍 Menganalisis Permasalahan</h2>
+                                    <p class="text-red-100 text-lg">Analyzing - Memahami dan Mendefinisikan Masalah</p>
+                                </div>
+                            </div>
+                            <div class="text-6xl opacity-20">🔍</div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8">
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">📋 Definisi dan Tujuan</h3>
+                                <p class="text-gray-700 leading-relaxed mb-6">
+                                    Tahap analisis adalah fondasi dari seluruh proses pemrograman. Di sini, kita berusaha memahami 
+                                    masalah secara mendalam, mengidentifikasi kebutuhan, dan mendefinisikan spesifikasi yang jelas 
+                                    sebelum melangkah ke tahap berikutnya.
+                                </p>
+                                
+                                <div class="bg-red-50 p-6 rounded-xl border border-red-200 mb-6">
+                                    <h4 class="text-lg font-bold text-red-800 mb-3">🎯 Output Tahap Analisis:</h4>
+                                    <div class="space-y-3">
+                                        <div class="flex items-start space-x-3">
+                                            <div class="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mt-1">📝</div>
+                                            <div>
+                                                <h5 class="font-semibold text-gray-800">Problem Statement</h5>
+                                                <p class="text-gray-600 text-sm">Pernyataan masalah yang jelas dan spesifik</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start space-x-3">
+                                            <div class="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mt-1">📥</div>
+                                            <div>
+                                                <h5 class="font-semibold text-gray-800">Input Specification</h5>
+                                                <p class="text-gray-600 text-sm">Definisi data masukan yang diperlukan</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start space-x-3">
+                                            <div class="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mt-1">📤</div>
+                                            <div>
+                                                <h5 class="font-semibold text-gray-800">Output Specification</h5>
+                                                <p class="text-gray-600 text-sm">Definisi hasil yang diharapkan</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start space-x-3">
+                                            <div class="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mt-1">⚠️</div>
+                                            <div>
+                                                <h5 class="font-semibold text-gray-800">Constraints</h5>
+                                                <p class="text-gray-600 text-sm">Batasan-batasan sistem dan lingkungan</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">🛠️ Langkah-langkah Praktis</h3>
+                                <div class="space-y-4">
+                                    <div class="bg-white border-l-4 border-red-500 p-4 shadow-sm rounded-r-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">1. Identifikasi Stakeholder</h4>
+                                        <p class="text-gray-600 text-sm">Tentukan siapa yang akan menggunakan program dan apa kebutuhan mereka</p>
+                                    </div>
+                                    <div class="bg-white border-l-4 border-red-500 p-4 shadow-sm rounded-r-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">2. Kumpulkan Requirements</h4>
+                                        <p class="text-gray-600 text-sm">Dokumentasikan semua kebutuhan fungsional dan non-fungsional</p>
+                                    </div>
+                                    <div class="bg-white border-l-4 border-red-500 p-4 shadow-sm rounded-r-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">3. Definisikan Batasan</h4>
+                                        <p class="text-gray-600 text-sm">Tentukan keterbatasan teknis, waktu, dan sumber daya</p>
+                                    </div>
+                                    <div class="bg-white border-l-4 border-red-500 p-4 shadow-sm rounded-r-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">4. Validasi Pemahaman</h4>
+                                        <p class="text-gray-600 text-sm">Konfirmasi pemahaman dengan stakeholder</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tahap 2: Problem Solving -->
+                <div class="process-card bg-white rounded-2xl shadow-xl overflow-hidden fade-in">
+                    <div class="bg-gradient-to-r from-blue-500 to-cyan-600 p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="step-indicator step-2 bg-white/20 backdrop-blur-sm rounded-full w-16 h-16 flex items-center justify-center">
+                                    <span class="text-2xl font-bold">2</span>
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl font-bold">🎨 Mendesain Solusi</h2>
+                                    <p class="text-blue-100 text-lg">Problem Solving - Merancang Algoritma</p>
+                                </div>
+                            </div>
+                            <div class="text-6xl opacity-20">🎨</div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8">
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">🧠 Proses Berpikir Algoritmik</h3>
+                                <p class="text-gray-700 leading-relaxed mb-6">
+                                    Tahap ini melibatkan kreativitas dan logika untuk merancang solusi yang efektif. 
+                                    Kita mengembangkan algoritma yang akan menjadi blueprint untuk implementasi program.
+                                </p>
+                                
+                                <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                                    <h4 class="text-lg font-bold text-blue-800 mb-4">📊 Bentuk Representasi Algoritma:</h4>
+                                    <div class="grid grid-cols-1 gap-4">
+                                        <div class="bg-white p-4 rounded-lg border border-blue-200">
+                                            <div class="flex items-center space-x-3 mb-2">
+                                                <span class="text-2xl">📖</span>
+                                                <h5 class="font-semibold text-gray-800">Narasi (Natural Language)</h5>
+                                            </div>
+                                            <p class="text-gray-600 text-sm">Deskripsi langkah-langkah dalam bahasa sehari-hari</p>
+                                        </div>
+                                        <div class="bg-white p-4 rounded-lg border border-blue-200">
+                                            <div class="flex items-center space-x-3 mb-2">
+                                                <span class="text-2xl">💻</span>
+                                                <h5 class="font-semibold text-gray-800">Pseudocode</h5>
+                                            </div>
+                                            <p class="text-gray-600 text-sm">Notasi semi-formal yang menyerupai kode program</p>
+                                        </div>
+                                        <div class="bg-white p-4 rounded-lg border border-blue-200">
+                                            <div class="flex items-center space-x-3 mb-2">
+                                                <span class="text-2xl">📊</span>
+                                                <h5 class="font-semibold text-gray-800">Flowchart</h5>
+                                            </div>
+                                            <p class="text-gray-600 text-sm">Diagram alir visual yang menunjukkan alur logika</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">⚡ Prinsip Desain Algoritma</h3>
+                                <div class="space-y-4">
+                                    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border border-blue-200">
+                                        <h4 class="font-semibold text-blue-800 mb-2">🎯 Correctness</h4>
+                                        <p class="text-gray-700 text-sm">Algoritma harus menghasilkan output yang benar untuk semua input yang valid</p>
+                                    </div>
+                                    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border border-blue-200">
+                                        <h4 class="font-semibold text-blue-800 mb-2">⚡ Efficiency</h4>
+                                        <p class="text-gray-700 text-sm">Mengoptimalkan penggunaan waktu dan memori</p>
+                                    </div>
+                                    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border border-blue-200">
+                                        <h4 class="font-semibold text-blue-800 mb-2">📖 Clarity</h4>
+                                        <p class="text-gray-700 text-sm">Mudah dipahami dan diikuti oleh programmer lain</p>
+                                    </div>
+                                    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg border border-blue-200">
+                                        <h4 class="font-semibold text-blue-800 mb-2">🔧 Modularity</h4>
+                                        <p class="text-gray-700 text-sm">Dapat dipecah menjadi bagian-bagian yang lebih kecil</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 bg-gradient-to-r from-cyan-100 to-blue-100 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">💡 Tips Desain:</h4>
+                                    <ul class="text-gray-700 text-sm space-y-1">
+                                        <li>• Mulai dengan kasus sederhana</li>
+                                        <li>• Gunakan pendekatan divide and conquer</li>
+                                        <li>• Pertimbangkan edge cases</li>
+                                        <li>• Validasi logika dengan trace table</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tahap 3: Coding -->
+                <div class="process-card bg-white rounded-2xl shadow-xl overflow-hidden fade-in">
+                    <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="step-indicator step-3 bg-white/20 backdrop-blur-sm rounded-full w-16 h-16 flex items-center justify-center">
+                                    <span class="text-2xl font-bold">3</span>
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl font-bold">💻 Mengimplementasikan Solusi</h2>
+                                    <p class="text-green-100 text-lg">Coding - Menerjemahkan Algoritma ke Program</p>
+                                </div>
+                            </div>
+                            <div class="text-6xl opacity-20">💻</div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8">
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">🔧 Proses Implementasi</h3>
+                                <p class="text-gray-700 leading-relaxed mb-6">
+                                    Tahap coding adalah proses menerjemahkan algoritma yang telah dirancang ke dalam bahasa pemrograman. 
+                                    Pemilihan bahasa dan tools yang tepat sangat mempengaruhi efektivitas implementasi.
+                                </p>
+                                
+                                <div class="bg-green-50 p-6 rounded-xl border border-green-200 mb-6">
+                                    <h4 class="text-lg font-bold text-green-800 mb-3">🎯 Pertimbangan Utama:</h4>
+                                    <div class="space-y-3">
+                                        <div class="flex items-start space-x-3">
+                                            <div class="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mt-1">🔤</div>
+                                            <div>
+                                                <h5 class="font-semibold text-gray-800">Pemilihan Bahasa</h5>
+                                                <p class="text-gray-600 text-sm">Sesuaikan dengan kebutuhan, performa, dan ekosistem</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start space-x-3">
+                                            <div class="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mt-1">📚</div>
+                                            <div>
+                                                <h5 class="font-semibold text-gray-800">Library & Framework</h5>
+                                                <p class="text-gray-600 text-sm">Manfaatkan tools yang sudah ada untuk efisiensi</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start space-x-3">
+                                            <div class="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs mt-1">📖</div>
+                                            <div>
+                                                <h5 class="font-semibold text-gray-800">Code Quality</h5>
+                                                <p class="text-gray-600 text-sm">Keterbacaan, maintainability, dan dokumentasi</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">📋 Best Practices</h3>
+                                <div class="space-y-4">
+                                    <div class="bg-white border-l-4 border-green-500 p-4 shadow-sm rounded-r-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">🎨 Clean Code</h4>
+                                        <p class="text-gray-600 text-sm">Gunakan naming convention yang jelas dan konsisten</p>
+                                    </div>
+                                    <div class="bg-white border-l-4 border-green-500 p-4 shadow-sm rounded-r-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">🔧 Modular Programming</h4>
+                                        <p class="text-gray-600 text-sm">Pecah kode menjadi fungsi-fungsi yang dapat digunakan kembali</p>
+                                    </div>
+                                    <div class="bg-white border-l-4 border-green-500 p-4 shadow-sm rounded-r-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">📝 Documentation</h4>
+                                        <p class="text-gray-600 text-sm">Berikan komentar yang menjelaskan logika kompleks</p>
+                                    </div>
+                                    <div class="bg-white border-l-4 border-green-500 p-4 shadow-sm rounded-r-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">🛡️ Error Handling</h4>
+                                        <p class="text-gray-600 text-sm">Antisipasi dan tangani kemungkinan error</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 bg-gradient-to-r from-emerald-100 to-green-100 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">⚡ Tips Coding:</h4>
+                                    <ul class="text-gray-700 text-sm space-y-1">
+                                        <li>• Implementasi bertahap (incremental)</li>
+                                        <li>• Test setiap modul secara terpisah</li>
+                                        <li>• Gunakan version control (Git)</li>
+                                        <li>• Refactor kode secara berkala</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tahap 4: Testing -->
+                <div class="process-card bg-white rounded-2xl shadow-xl overflow-hidden fade-in">
+                    <div class="bg-gradient-to-r from-purple-500 to-violet-600 p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="step-indicator step-4 bg-white/20 backdrop-blur-sm rounded-full w-16 h-16 flex items-center justify-center">
+                                    <span class="text-2xl font-bold">4</span>
+                                </div>
+                                <div>
+                                    <h2 class="text-3xl font-bold">🧪 Menguji Program</h2>
+                                    <p class="text-purple-100 text-lg">Testing - Validasi dan Verifikasi</p>
+                                </div>
+                            </div>
+                            <div class="text-6xl opacity-20">🧪</div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-8">
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">🎯 Tujuan Testing</h3>
+                                <p class="text-gray-700 leading-relaxed mb-6">
+                                    Testing bukan hanya tentang menemukan bug, tetapi juga memastikan bahwa program memenuhi 
+                                    semua requirement yang telah didefinisikan di tahap analisis dan berfungsi dengan baik 
+                                    dalam berbagai kondisi.
+                                </p>
+                                
+                                <div class="bg-purple-50 p-6 rounded-xl border border-purple-200">
+                                    <h4 class="text-lg font-bold text-purple-800 mb-4">🔍 Jenis-jenis Testing:</h4>
+                                    <div class="space-y-3">
+                                        <div class="bg-white p-3 rounded-lg border border-purple-200">
+                                            <h5 class="font-semibold text-gray-800 flex items-center">
+                                                <span class="text-purple-600 mr-2">🔧</span>
+                                                Unit Testing
+                                            </h5>
+                                            <p class="text-gray-600 text-sm mt-1">Menguji komponen individual secara terpisah</p>
+                                        </div>
+                                        <div class="bg-white p-3 rounded-lg border border-purple-200">
+                                            <h5 class="font-semibold text-gray-800 flex items-center">
+                                                <span class="text-purple-600 mr-2">🔗</span>
+                                                Integration Testing
+                                            </h5>
+                                            <p class="text-gray-600 text-sm mt-1">Menguji interaksi antar komponen</p>
+                                        </div>
+                                        <div class="bg-white p-3 rounded-lg border border-purple-200">
+                                            <h5 class="font-semibold text-gray-800 flex items-center">
+                                                <span class="text-purple-600 mr-2">👤</span>
+                                                User Acceptance Testing
+                                            </h5>
+                                            <p class="text-gray-600 text-sm mt-1">Validasi dari perspektif pengguna akhir</p>
+                                        </div>
+                                        <div class="bg-white p-3 rounded-lg border border-purple-200">
+                                            <h5 class="font-semibold text-gray-800 flex items-center">
+                                                <span class="text-purple-600 mr-2">⚡</span>
+                                                Performance Testing
+                                            </h5>
+                                            <p class="text-gray-600 text-sm mt-1">Menguji kecepatan dan efisiensi program</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-800 mb-4">📊 Strategi Testing</h3>
+                                <div class="space-y-4">
+                                    <div class="bg-white border-l-4 border-purple-500 p-4 shadow-sm rounded-r-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">✅ Positive Testing</h4>
+                                        <p class="text-gray-600 text-sm">Menguji dengan input yang valid dan sesuai ekspektasi</p>
+                                    </div>
+                                    <div class="bg-white border-l-4 border-purple-500 p-4 shadow-sm rounded-r-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">❌ Negative Testing</h4>
+                                        <p class="text-gray-600 text-sm">Menguji dengan input yang tidak valid atau ekstrem</p>
+                                    </div>
+                                    <div class="bg-white border-l-4 border-purple-500 p-4 shadow-sm rounded-r-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">🎯 Boundary Testing</h4>
+                                        <p class="text-gray-600 text-sm">Menguji nilai-nilai di batas minimum dan maksimum</p>
+                                    </div>
+                                    <div class="bg-white border-l-4 border-purple-500 p-4 shadow-sm rounded-r-lg">
+                                        <h4 class="font-semibold text-gray-800 mb-2">🔄 Regression Testing</h4>
+                                        <p class="text-gray-600 text-sm">Memastikan perubahan tidak merusak fungsi yang sudah ada</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 bg-gradient-to-r from-violet-100 to-purple-100 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">📋 Test Case Design:</h4>
+                                    <ul class="text-gray-700 text-sm space-y-1">
+                                        <li>• Definisikan input dan expected output</li>
+                                        <li>• Cover semua path dalam algoritma</li>
+                                        <li>• Test edge cases dan error conditions</li>
+                                        <li>• Dokumentasikan hasil testing</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Studi Kasus Section -->
+        <section id="studi-kasus" class="section-content hidden">
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 fade-in">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-full mb-4 bounce-in">
+                        <span class="text-3xl">💡</span>
+                    </div>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">Studi Kasus: Program Identifikasi Jenis Segitiga</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        Mari kita terapkan 4 tahap proses pemrograman untuk membuat program yang mengidentifikasi jenis segitiga
+                    </p>
+                </div>
+
+                <!-- Problem Description -->
+                <div class="bg-gradient-to-r from-yellow-50 to-orange-50 p-8 rounded-xl mb-8 border border-yellow-200">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                        <span class="bg-yellow-500 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg mr-4">🎯</span>
+                        Deskripsi Masalah
+                    </h3>
+                    <p class="text-gray-700 leading-relaxed text-lg mb-4">
+                        Kita akan membuat program yang dapat mengidentifikasi jenis segitiga berdasarkan panjang ketiga sisinya. 
+                        Program harus dapat membedakan antara:
+                    </p>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="bg-white p-4 rounded-lg border border-yellow-300 text-center">
+                            <div class="text-3xl mb-2">🔺</div>
+                            <h4 class="font-bold text-gray-800">Sama Sisi</h4>
+                            <p class="text-gray-600 text-sm">Ketiga sisi sama panjang</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border border-yellow-300 text-center">
+                            <div class="text-3xl mb-2">📐</div>
+                            <h4 class="font-bold text-gray-800">Sama Kaki</h4>
+                            <p class="text-gray-600 text-sm">Dua sisi sama panjang</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border border-yellow-300 text-center">
+                            <div class="text-3xl mb-2">📏</div>
+                            <h4 class="font-bold text-gray-800">Sembarang</h4>
+                            <p class="text-gray-600 text-sm">Ketiga sisi berbeda panjang</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Demo -->
+                <div class="interactive-demo p-8 rounded-xl mb-8 text-white">
+                    <h3 class="text-2xl font-bold mb-6 text-center">🔧 Demo Interaktif Program</h3>
+                    <div class="grid lg:grid-cols-2 gap-8 items-center">
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Panjang Sisi A:</label>
+                                <input type="number" id="sideA" class="w-full px-4 py-3 rounded-lg text-gray-800 border-2 border-white/20 focus:border-white focus:outline-none" value="3" min="0.1" step="0.1">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Panjang Sisi B:</label>
+                                <input type="number" id="sideB" class="w-full px-4 py-3 rounded-lg text-gray-800 border-2 border-white/20 focus:border-white focus:outline-none" value="3" min="0.1" step="0.1">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Panjang Sisi C:</label>
+                                <input type="number" id="sideC" class="w-full px-4 py-3 rounded-lg text-gray-800 border-2 border-white/20 focus:border-white focus:outline-none" value="3" min="0.1" step="0.1">
+                            </div>
+                            <button onclick="analyzeTriangle()" class="w-full bg-white text-purple-600 py-3 px-6 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                                🔍 Analisis Segitiga
+                            </button>
+                        </div>
+                        <div class="text-center">
+                            <div id="triangleResult" class="bg-white/20 backdrop-blur-sm p-8 rounded-xl border-2 border-white/30">
+                                <div class="text-6xl mb-4">📐</div>
+                                <div class="text-xl font-bold mb-2">Masukkan nilai sisi segitiga</div>
+                                <div class="text-white/80">Klik tombol analisis untuk melihat hasilnya</div>
+                            </div>
+                            <div id="triangleVisualization" class="mt-6">
+                                <!-- Triangle visualization will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 Tahap Implementation -->
+                <div class="space-y-8">
+                    <!-- Tahap 1: Analisis -->
+                    <div class="bg-gradient-to-r from-red-50 to-pink-50 p-8 rounded-xl border border-red-200">
+                        <h3 class="text-2xl font-bold text-red-800 mb-6 flex items-center">
+                            <span class="bg-red-500 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg mr-4">1</span>
+                            Tahap Analisis (Analyzing)
+                        </h3>
+                        
+                        <!-- Problem Statement -->
+                        <div class="mb-8">
+                            <h4 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                                <span class="text-2xl mr-3">📋</span>
+                                Problem Statement
+                            </h4>
+                            <div class="bg-white p-6 rounded-lg border border-red-200">
+                                <div class="mb-4">
+                                    <h6 class="font-semibold text-red-700 mb-2">🎯 Tujuan Utama:</h6>
+                                    <p class="text-gray-700 leading-relaxed text-sm mb-3">
+                                        "Mengembangkan program yang dapat mengklasifikasikan jenis segitiga berdasarkan panjang ketiga sisinya 
+                                        dengan akurasi 100% dan memberikan feedback yang informatif kepada pengguna."
+                                    </p>
+                                </div>
+                                <div class="bg-red-50 p-4 rounded-lg">
+                                    <h6 class="font-semibold text-red-700 mb-2">📊 Success Criteria:</h6>
+                                    <ul class="text-gray-700 text-sm space-y-1">
+                                        <li>• Klasifikasi benar untuk semua input valid</li>
+                                        <li>• Deteksi error untuk input invalid</li>
+                                        <li>• Interface yang mudah dipahami</li>
+                                        <li>• Performa responsif (< 1 detik)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Spesifikasi Detail: Input, Proses, Output, Constraints -->
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div class="space-y-6">
+                                <!-- Input Specification -->
+                                <div class="bg-white p-6 rounded-lg border border-red-200">
+                                    <h5 class="font-semibold text-red-700 mb-4 flex items-center">
+                                        <span class="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm mr-3">📥</span>
+                                        Spesifikasi Input
+                                    </h5>
+                                    <div class="space-y-3">
+                                        <div class="bg-red-50 p-3 rounded-lg">
+                                            <h6 class="font-semibold text-red-800 mb-2">📋 Data yang Diperlukan:</h6>
+                                            <ul class="text-gray-700 text-sm space-y-1">
+                                                <li>• <strong>Sisi A:</strong> Panjang sisi pertama segitiga</li>
+                                                <li>• <strong>Sisi B:</strong> Panjang sisi kedua segitiga</li>
+                                                <li>• <strong>Sisi C:</strong> Panjang sisi ketiga segitiga</li>
+                                            </ul>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded-lg">
+                                            <h6 class="font-semibold text-gray-800 mb-2">🔢 Format & Validasi:</h6>
+                                            <ul class="text-gray-700 text-sm space-y-1">
+                                                <li>• <strong>Type:</strong> Bilangan real positif</li>
+                                                <li>• <strong>Range:</strong> 0.1 ≤ nilai ≤ 1000</li>
+                                                <li>• <strong>Format:</strong> Desimal (max 2 digit)</li>
+                                                <li>• <strong>Validasi:</strong> Harus memenuhi triangle inequality</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Process Specification -->
+                                <div class="bg-white p-6 rounded-lg border border-red-200">
+                                    <h5 class="font-semibold text-red-700 mb-4 flex items-center">
+                                        <span class="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm mr-3">⚙️</span>
+                                        Spesifikasi Proses
+                                    </h5>
+                                    <div class="space-y-3">
+                                        <div class="bg-red-50 p-3 rounded-lg">
+                                            <h6 class="font-semibold text-red-800 mb-2">🔍 Langkah Pemrosesan:</h6>
+                                            <ol class="text-gray-700 text-sm space-y-1 list-decimal list-inside">
+                                                <li>Validasi input (positif & numerik)</li>
+                                                <li>Periksa triangle inequality theorem</li>
+                                                <li>Bandingkan panjang ketiga sisi</li>
+                                                <li>Klasifikasi berdasarkan kesamaan sisi</li>
+                                                <li>Generate output sesuai hasil</li>
+                                            </ol>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded-lg">
+                                            <h6 class="font-semibold text-gray-800 mb-2">🧮 Algoritma Klasifikasi:</h6>
+                                            <ul class="text-gray-700 text-sm space-y-1">
+                                                <li>• <strong>IF</strong> a = b = c → Sama Sisi</li>
+                                                <li>• <strong>ELSE IF</strong> a = b OR b = c OR a = c → Sama Kaki</li>
+                                                <li>• <strong>ELSE</strong> → Sembarang</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-6">
+                                <!-- Output Specification -->
+                                <div class="bg-white p-6 rounded-lg border border-red-200">
+                                    <h5 class="font-semibold text-red-700 mb-4 flex items-center">
+                                        <span class="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm mr-3">📤</span>
+                                        Spesifikasi Output
+                                    </h5>
+                                    <div class="space-y-3">
+                                        <div class="bg-red-50 p-3 rounded-lg">
+                                            <h6 class="font-semibold text-red-800 mb-2">✅ Output Valid:</h6>
+                                            <ul class="text-gray-700 text-sm space-y-1">
+                                                <li>• <strong>"Segitiga Sama Sisi"</strong> - Ketiga sisi sama</li>
+                                                <li>• <strong>"Segitiga Sama Kaki"</strong> - Dua sisi sama</li>
+                                                <li>• <strong>"Segitiga Sembarang"</strong> - Ketiga sisi berbeda</li>
+                                            </ul>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded-lg">
+                                            <h6 class="font-semibold text-gray-800 mb-2">❌ Output Error:</h6>
+                                            <ul class="text-gray-700 text-sm space-y-1">
+                                                <li>• <strong>"Input tidak valid"</strong> - Nilai ≤ 0</li>
+                                                <li>• <strong>"Bukan segitiga valid"</strong> - Triangle inequality</li>
+                                                <li>• <strong>Format:</strong> String dengan kapitalisasi konsisten</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Constraints Specification -->
+                                <div class="bg-white p-6 rounded-lg border border-red-200">
+                                    <h5 class="font-semibold text-red-700 mb-4 flex items-center">
+                                        <span class="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm mr-3">⚠️</span>
+                                        Spesifikasi Constraints
+                                    </h5>
+                                    <div class="space-y-3">
+                                        <div class="bg-red-50 p-3 rounded-lg">
+                                            <h6 class="font-semibold text-red-800 mb-2">🔒 Batasan Teknis:</h6>
+                                            <ul class="text-gray-700 text-sm space-y-1">
+                                                <li>• <strong>Precision:</strong> JavaScript floating point (15-17 digits)</li>
+                                                <li>• <strong>Performance:</strong> Response time < 100ms</li>
+                                                <li>• <strong>Memory:</strong> Minimal memory usage</li>
+                                            </ul>
+                                        </div>
+                                        <div class="bg-gray-50 p-3 rounded-lg">
+                                            <h6 class="font-semibold text-gray-800 mb-2">🌐 Batasan Lingkungan:</h6>
+                                            <ul class="text-gray-700 text-sm space-y-1">
+                                                <li>• <strong>Platform:</strong> Modern browser (ES6+)</li>
+                                                <li>• <strong>User:</strong> Pemahaman dasar geometri</li>
+                                                <li>• <strong>Range:</strong> Nilai praktis untuk pembelajaran</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Analisis Lebih Lanjut -->
+                        <div class="mt-8 bg-gradient-to-r from-red-100 to-pink-100 p-6 rounded-xl border border-red-300">
+                            <h4 class="text-lg font-bold text-red-800 mb-4 flex items-center">
+                                <span class="text-2xl mr-3">🔬</span>
+                                Hasil Analisis Mendalam
+                            </h4>
+                            <div class="grid md:grid-cols-3 gap-4">
+                                <div class="bg-white p-4 rounded-lg border border-red-200">
+                                    <h5 class="font-semibold text-red-700 mb-2">🎯 Complexity Assessment:</h5>
+                                    <p class="text-gray-700 text-sm">Problem ini memiliki kompleksitas rendah dengan logika conditional sederhana, cocok untuk pembelajaran algoritma dasar.</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg border border-red-200">
+                                    <h5 class="font-semibold text-red-700 mb-2">📈 Scalability Consideration:</h5>
+                                    <p class="text-gray-700 text-sm">Algoritma dapat diperluas untuk klasifikasi segitiga berdasarkan sudut atau perhitungan luas/keliling.</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg border border-red-200">
+                                    <h5 class="font-semibold text-red-700 mb-2">🔧 Implementation Strategy:</h5>
+                                    <p class="text-gray-700 text-sm">Pendekatan modular dengan fungsi terpisah untuk validasi, klasifikasi, dan error handling.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tahap 2: Desain -->
+                    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-8 rounded-xl border border-blue-200">
+                        <h3 class="text-2xl font-bold text-blue-800 mb-6 flex items-center">
+                            <span class="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg mr-4">2</span>
+                            Tahap Desain (Problem Solving)
+                        </h3>
+                        
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-4">📖 Algoritma Narasi</h4>
+                                <div class="bg-white p-6 rounded-lg border border-blue-200">
+                                    <ol class="text-gray-700 space-y-2 text-sm">
+                                        <li>1. Baca nilai panjang sisi a, b, dan c</li>
+                                        <li>2. Validasi bahwa semua nilai positif</li>
+                                        <li>3. Periksa apakah membentuk segitiga valid</li>
+                                        <li>4. Jika a = b = c, maka "Sama Sisi"</li>
+                                        <li>5. Jika tidak, periksa apakah ada dua sisi yang sama</li>
+                                        <li>6. Jika ya, maka "Sama Kaki"</li>
+                                        <li>7. Jika tidak, maka "Sembarang"</li>
+                                        <li>8. Tampilkan hasil</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-4">💻 Pseudocode</h4>
+                                <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm overflow-x-auto">
+                                    <pre>
+ALGORITMA IdentifikasiSegitiga
+INPUT: a, b, c (real)
+OUTPUT: jenis_segitiga (string)
+
+BEGIN
+    READ a, b, c
+    
+    IF (a <= 0 OR b <= 0 OR c <= 0) THEN
+        OUTPUT "Input tidak valid"
+        RETURN
+    END IF
+    
+    IF (a+b <= c OR a+c <= b OR b+c <= a) THEN
+        OUTPUT "Bukan segitiga valid"
+        RETURN
+    END IF
+    
+    IF (a = b AND b = c) THEN
+        jenis_segitiga = "Sama Sisi"
+    ELSE IF (a = b OR b = c OR a = c) THEN
+        jenis_segitiga = "Sama Kaki"
+    ELSE
+        jenis_segitiga = "Sembarang"
+    END IF
+    
+    OUTPUT jenis_segitiga
+END
+                                    </pre>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="text-lg font-bold text-gray-800 mb-4">📊 Flowchart</h4>
+                            <div class="bg-white p-6 rounded-lg border border-blue-200 text-center">
+                                <svg width="800" height="600" viewBox="0 0 800 600" class="mx-auto">
+                                    <!-- Start -->
+                                    <ellipse cx="400" cy="30" rx="50" ry="20" fill="#4ade80" stroke="#16a34a" stroke-width="2"/>
+                                    <text x="400" y="35" text-anchor="middle" fill="white" font-size="12" font-weight="bold">START</text>
+                                    
+                                    <!-- Input -->
+                                    <rect x="350" y="70" width="100" height="40" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2" rx="5"/>
+                                    <text x="400" y="85" text-anchor="middle" fill="white" font-size="10" font-weight="bold">INPUT</text>
+                                    <text x="400" y="98" text-anchor="middle" fill="white" font-size="10">a, b, c</text>
+                                    
+                                    <!-- Validation -->
+                                    <polygon points="400,130 450,150 400,170 350,150" fill="#f59e0b" stroke="#d97706" stroke-width="2"/>
+                                    <text x="400" y="148" text-anchor="middle" fill="white" font-size="9" font-weight="bold">Valid?</text>
+                                    <text x="400" y="158" text-anchor="middle" fill="white" font-size="8">(>0 & triangle)</text>
+                                    
+                                    <!-- Error -->
+                                    <rect x="530" y="130" width="80" height="40" fill="#ef4444" stroke="#dc2626" stroke-width="2" rx="5"/>
+                                    <text x="570" y="148" text-anchor="middle" fill="white" font-size="10" font-weight="bold">ERROR</text>
+                                    <text x="570" y="158" text-anchor="middle" fill="white" font-size="9">Invalid Input</text>
+                                    
+                                    <!-- Check Equal -->
+                                    <polygon points="400,220 450,240 400,260 350,240" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2"/>
+                                    <text x="400" y="238" text-anchor="middle" fill="white" font-size="9" font-weight="bold">a=b=c?</text>
+                                    
+                                    <!-- Sama Sisi -->
+                                    <rect x="120" y="220" width="100" height="40" fill="#10b981" stroke="#059669" stroke-width="2" rx="5"/>
+                                    <text x="170" y="238" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Sama Sisi</text>
+                                    
+                                    <!-- Check Two Equal -->
+                                    <polygon points="400,320 450,340 400,360 350,340" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2"/>
+                                    <text x="400" y="338" text-anchor="middle" fill="white" font-size="9" font-weight="bold">2 sisi sama?</text>
+                                    
+                                    <!-- Sama Kaki -->
+                                    <rect x="120" y="320" width="100" height="40" fill="#3b82f6" stroke="#1d4ed8" stroke-width="2" rx="5"/>
+                                    <text x="170" y="338" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Sama Kaki</text>
+                                    
+                                    <!-- Sembarang -->
+                                    <rect x="350" y="420" width="100" height="40" fill="#f59e0b" stroke="#d97706" stroke-width="2" rx="5"/>
+                                    <text x="400" y="438" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Sembarang</text>
+                                    
+                                    <!-- Output -->
+                                    <rect x="350" y="500" width="100" height="40" fill="#6366f1" stroke="#4f46e5" stroke-width="2" rx="5"/>
+                                    <text x="400" y="518" text-anchor="middle" fill="white" font-size="10" font-weight="bold">OUTPUT</text>
+                                    <text x="400" y="528" text-anchor="middle" fill="white" font-size="9">Result</text>
+                                    
+                                    <!-- End -->
+                                    <ellipse cx="400" cy="570" rx="50" ry="20" fill="#ef4444" stroke="#dc2626" stroke-width="2"/>
+                                    <text x="400" y="575" text-anchor="middle" fill="white" font-size="12" font-weight="bold">END</text>
+                                    
+                                    <!-- Arrows -->
+                                    <defs>
+                                        <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                            <polygon points="0 0, 10 3.5, 0 7" fill="#374151"/>
+                                        </marker>
+                                    </defs>
+                                    
+                                    <!-- Flow arrows -->
+                                    <line x1="400" y1="50" x2="400" y2="70" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                                    <line x1="400" y1="110" x2="400" y2="130" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                                    <line x1="450" y1="150" x2="530" y2="150" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                                    <line x1="400" y1="170" x2="400" y2="220" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                                    <line x1="350" y1="240" x2="220" y2="240" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                                    <line x1="400" y1="260" x2="400" y2="320" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                                    <line x1="350" y1="340" x2="220" y2="340" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                                    <line x1="400" y1="360" x2="400" y2="420" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                                    
+                                    <!-- Connecting lines from outputs to final OUTPUT -->
+                                    <!-- From Sama Sisi to OUTPUT (path goes left then down then right) -->
+                                    <line x1="120" y1="240" x2="80" y2="240" stroke="#374151" stroke-width="2"/>
+                                    <line x1="80" y1="240" x2="80" y2="520" stroke="#374151" stroke-width="2"/>
+                                    <line x1="80" y1="520" x2="350" y2="520" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                                    
+                                    <!-- From Sama Kaki to OUTPUT (path goes down then right) -->
+                                    <line x1="170" y1="360" x2="170" y2="480" stroke="#374151" stroke-width="2"/>
+                                    <line x1="170" y1="480" x2="350" y2="480" stroke="#374151" stroke-width="2"/>
+                                    <line x1="350" y1="480" x2="350" y2="500" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                                    
+                                    <!-- From Sembarang to OUTPUT -->
+                                    <line x1="400" y1="460" x2="400" y2="500" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                                    
+                                    <!-- From OUTPUT to END -->
+                                    <line x1="400" y1="540" x2="400" y2="550" stroke="#374151" stroke-width="2" marker-end="url(#arrowhead2)"/>
+                                    
+                                    <!-- Labels -->
+                                    <text x="490" y="145" fill="#374151" font-size="10">No</text>
+                                    <text x="415" y="205" fill="#374151" font-size="10">Yes</text>
+                                    <text x="280" y="235" fill="#374151" font-size="10">Yes</text>
+                                    <text x="415" y="305" fill="#374151" font-size="10">No</text>
+                                    <text x="280" y="335" fill="#374151" font-size="10">Yes</text>
+                                    <text x="415" y="405" fill="#374151" font-size="10">No</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tahap 3: Coding -->
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-8 rounded-xl border border-green-200">
+                        <h3 class="text-2xl font-bold text-green-800 mb-6 flex items-center">
+                            <span class="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg mr-4">3</span>
+                            Tahap Implementasi (Coding)
+                        </h3>
+                        
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-4">💻 Implementasi JavaScript</h4>
+                                <div class="bg-gray-900 text-green-400 p-6 rounded-lg font-mono text-sm overflow-x-auto">
+                                    <pre>
+function identifikasiSegitiga(a, b, c) {
+    // Validasi input
+    if (a <= 0 || b <= 0 || c <= 0) {
+        return "Error: Nilai sisi harus positif";
+    }
+    
+    // Periksa ketentuan segitiga
+    if (a + b <= c || a + c <= b || b + c <= a) {
+        return "Error: Bukan segitiga valid";
+    }
+    
+    // Klasifikasi jenis segitiga
+    if (a === b && b === c) {
+        return "Segitiga Sama Sisi";
+    } else if (a === b || b === c || a === c) {
+        return "Segitiga Sama Kaki";
+    } else {
+        return "Segitiga Sembarang";
+    }
+}
+
+// Contoh penggunaan
+console.log(identifikasiSegitiga(3, 3, 3)); 
+// Output: "Segitiga Sama Sisi"
+
+console.log(identifikasiSegitiga(2, 2, 3)); 
+// Output: "Segitiga Sama Kaki"
+
+console.log(identifikasiSegitiga(3, 4, 5)); 
+// Output: "Segitiga Sembarang"
+                                    </pre>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-4">🔧 Penjelasan Kode</h4>
+                                <div class="space-y-4">
+                                    <div class="bg-white p-4 rounded-lg border border-green-200">
+                                        <h5 class="font-semibold text-green-700 mb-2">📥 Input Validation</h5>
+                                        <p class="text-gray-700 text-sm">Memastikan semua nilai sisi positif dan membentuk segitiga valid</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded-lg border border-green-200">
+                                        <h5 class="font-semibold text-green-700 mb-2">🔍 Triangle Inequality</h5>
+                                        <p class="text-gray-700 text-sm">Memeriksa apakah jumlah dua sisi lebih besar dari sisi ketiga</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded-lg border border-green-200">
+                                        <h5 class="font-semibold text-green-700 mb-2">🎯 Classification Logic</h5>
+                                        <p class="text-gray-700 text-sm">Menggunakan conditional statements untuk mengklasifikasi jenis segitiga</p>
+                                    </div>
+                                    <div class="bg-white p-4 rounded-lg border border-green-200">
+                                        <h5 class="font-semibold text-green-700 mb-2">🛡️ Error Handling</h5>
+                                        <p class="text-gray-700 text-sm">Menangani kasus input yang tidak valid dengan pesan error yang informatif</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 bg-gradient-to-r from-emerald-100 to-green-100 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">💡 Pertimbangan Implementasi:</h4>
+                                    <ul class="text-gray-700 text-sm space-y-1">
+                                        <li>• Menggunakan strict equality (===) untuk perbandingan</li>
+                                        <li>• Validasi input di awal untuk early return</li>
+                                        <li>• Pesan error yang deskriptif untuk debugging</li>
+                                        <li>• Struktur if-else yang logis dan mudah dibaca</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tahap 4: Testing -->
+                    <div class="bg-gradient-to-r from-purple-50 to-violet-50 p-8 rounded-xl border border-purple-200">
+                        <h3 class="text-2xl font-bold text-purple-800 mb-6 flex items-center">
+                            <span class="bg-purple-500 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg mr-4">4</span>
+                            Tahap Testing
+                        </h3>
+                        
+                        <div class="grid lg:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-4">📊 Test Cases</h4>
+                                <div class="space-y-4">
+                                    <div class="bg-white p-4 rounded-lg border border-purple-200">
+                                        <h5 class="font-semibold text-purple-700 mb-2">✅ Positive Test Cases</h5>
+                                        <div class="space-y-2 text-sm">
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-700">Input: (3, 3, 3)</span>
+                                                <span class="text-green-600 font-medium">Expected: Sama Sisi ✓</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-700">Input: (2, 2, 3)</span>
+                                                <span class="text-green-600 font-medium">Expected: Sama Kaki ✓</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-700">Input: (3, 4, 5)</span>
+                                                <span class="text-green-600 font-medium">Expected: Sembarang ✓</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-white p-4 rounded-lg border border-purple-200">
+                                        <h5 class="font-semibold text-purple-700 mb-2">❌ Negative Test Cases</h5>
+                                        <div class="space-y-2 text-sm">
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-700">Input: (0, 2, 3)</span>
+                                                <span class="text-red-600 font-medium">Expected: Error ✓</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-700">Input: (1, 1, 5)</span>
+                                                <span class="text-red-600 font-medium">Expected: Error ✓</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-700">Input: (-1, 2, 3)</span>
+                                                <span class="text-red-600 font-medium">Expected: Error ✓</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-white p-4 rounded-lg border border-purple-200">
+                                        <h5 class="font-semibold text-purple-700 mb-2">🎯 Boundary Test Cases</h5>
+                                        <div class="space-y-2 text-sm">
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-700">Input: (1, 1, 1.9)</span>
+                                                <span class="text-green-600 font-medium">Expected: Sama Kaki ✓</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-gray-700">Input: (1, 1, 2)</span>
+                                                <span class="text-red-600 font-medium">Expected: Error ✓</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-800 mb-4">📈 Test Results</h4>
+                                <div class="bg-white p-6 rounded-lg border border-purple-200">
+                                    <div class="text-center mb-4">
+                                        <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
+                                            <span class="text-3xl">✅</span>
+                                        </div>
+                                        <h5 class="text-xl font-bold text-green-800">All Tests Passed!</h5>
+                                        <p class="text-gray-600">Program berhasil melewati semua test case</p>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-2 gap-4 text-center">
+                                        <div class="bg-green-50 p-3 rounded-lg">
+                                            <div class="text-2xl font-bold text-green-600">8/8</div>
+                                            <div class="text-sm text-gray-600">Test Cases Passed</div>
+                                        </div>
+                                        <div class="bg-blue-50 p-3 rounded-lg">
+                                            <div class="text-2xl font-bold text-blue-600">100%</div>
+                                            <div class="text-sm text-gray-600">Code Coverage</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 bg-gradient-to-r from-violet-100 to-purple-100 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">🔍 Testing Insights:</h4>
+                                    <ul class="text-gray-700 text-sm space-y-1">
+                                        <li>• Semua path dalam algoritma telah diuji</li>
+                                        <li>• Error handling berfungsi dengan baik</li>
+                                        <li>• Boundary conditions telah diverifikasi</li>
+                                        <li>• Program siap untuk deployment</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kuis Section -->
+        <section id="kuis" class="section-content hidden">
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 fade-in">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-red-500 to-pink-600 rounded-full mb-4 bounce-in">
+                        <span class="text-3xl">🎯</span>
+                    </div>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">Kuis HOTS - Proses Pemrograman</h2>
+                    <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                        Uji pemahaman Anda tentang proses pemrograman dengan 5 soal Higher Order Thinking Skills
+                    </p>
+                </div>
+
+                <div id="quiz-container">
+                    <div class="mb-8">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center space-x-4">
+                                <span class="text-lg font-semibold text-gray-700">Soal <span id="current-question">1</span> dari 5</span>
+                                <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                                    Skor: <span id="score">0</span>/5
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-gray-500">Progress</div>
+                                <div class="w-32 bg-gray-200 rounded-full h-2">
+                                    <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-500" style="width: 20%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="question-container" class="mb-8">
+                        <!-- Questions will be loaded here -->
+                    </div>
+
+                    <div class="flex justify-between">
+                        <button id="prev-btn" onclick="previousQuestion()" class="px-8 py-3 bg-gray-300 text-gray-700 rounded-xl hover:bg-gray-400 transition-colors font-medium" disabled>
+                            ← Sebelumnya
+                        </button>
+                        <button id="next-btn" onclick="nextQuestion()" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-colors font-medium">
+                            Selanjutnya →
+                        </button>
+                    </div>
+                </div>
+
+                <div id="quiz-result" class="hidden text-center">
+                    <div class="mb-8">
+                        <div class="text-8xl mb-6">🎉</div>
+                        <h3 class="text-3xl font-bold text-gray-800 mb-4">Kuis Selesai!</h3>
+                        <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-xl mb-8 border border-blue-200">
+                            <div class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-4">
+                                Skor Akhir: <span id="final-score">0</span>/5
+                            </div>
+                            <div id="score-message" class="text-xl text-gray-700 mb-4"></div>
+                            <div id="score-percentage" class="text-lg text-gray-600"></div>
+                        </div>
+                        <div class="space-x-4">
+                            <button onclick="restartQuiz()" class="px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-colors font-medium">
+                                🔄 Ulangi Kuis
+                            </button>
+                            <button onclick="showSection('konsep')" class="px-8 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-xl hover:from-gray-700 hover:to-gray-800 transition-colors font-medium">
+                                📚 Pelajari Lagi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12 mt-16">
+        <div class="container mx-auto px-6 text-center">
+            <div class="mb-6">
+                <h3 class="text-2xl font-bold mb-2">🔄 Proses Pemrograman</h3>
+                <p class="text-gray-300">Multimedia Interaktif untuk Pembelajaran Efektif</p>
+            </div>
+            <div class="border-t border-gray-700 pt-6">
+                <p class="text-gray-400">© 2024 Educational Content - Dibuat untuk meningkatkan pemahaman konsep pemrograman</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section-content');
+            sections.forEach(section => section.classList.add('hidden'));
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.remove('hidden');
+            
+            // Update navigation buttons
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => {
+                btn.classList.remove('bg-gradient-to-r', 'from-blue-600', 'to-purple-600', 'text-white', 'shadow-lg');
+                btn.classList.add('text-gray-600', 'hover:text-blue-600');
+            });
+            
+            event.target.classList.add('bg-gradient-to-r', 'from-blue-600', 'to-purple-600', 'text-white', 'shadow-lg');
+            event.target.classList.remove('text-gray-600', 'hover:text-blue-600');
+        }
+
+        // Step highlighting for circular diagram
+        function highlightStep(stepNumber) {
+            const stepDetails = document.getElementById('step-details');
+            const steps = {
+                1: {
+                    title: "🔍 Tahap Analisis (Analyzing)",
+                    content: `
+                        <div class="text-left">
+                            <h4 class="text-xl font-bold text-red-700 mb-4">Menganalisis Permasalahan</h4>
+                            <p class="text-gray-700 mb-4">Tahap pertama dalam proses pemrograman di mana kita memahami masalah secara mendalam dan mendefinisikan spesifikasi yang jelas.</p>
+                            <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                                <h5 class="font-semibold text-red-800 mb-2">Output yang dihasilkan:</h5>
+                                <ul class="text-gray-700 space-y-1 text-sm">
+                                    <li>• <strong>Problem Statement:</strong> Pernyataan masalah yang jelas</li>
+                                    <li>• <strong>Input Specification:</strong> Definisi data masukan</li>
+                                    <li>• <strong>Output Specification:</strong> Definisi hasil yang diharapkan</li>
+                                    <li>• <strong>Constraints:</strong> Batasan-batasan sistem</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `,
+                    color: "border-red-500"
+                },
+                2: {
+                    title: "🎨 Tahap Desain (Problem Solving)",
+                    content: `
+                        <div class="text-left">
+                            <h4 class="text-xl font-bold text-blue-700 mb-4">Mendesain Solusi</h4>
+                            <p class="text-gray-700 mb-4">Tahap merancang algoritma sebagai blueprint untuk menyelesaikan masalah yang telah dianalisis.</p>
+                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                <h5 class="font-semibold text-blue-800 mb-2">Bentuk algoritma yang dihasilkan:</h5>
+                                <ul class="text-gray-700 space-y-1 text-sm">
+                                    <li>• <strong>Narasi:</strong> Deskripsi langkah-langkah dalam bahasa natural</li>
+                                    <li>• <strong>Pseudocode:</strong> Notasi semi-formal menyerupai kode</li>
+                                    <li>• <strong>Flowchart:</strong> Diagram alir visual</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `,
+                    color: "border-blue-500"
+                },
+                3: {
+                    title: "💻 Tahap Implementasi (Coding)",
+                    content: `
+                        <div class="text-left">
+                            <h4 class="text-xl font-bold text-green-700 mb-4">Mengimplementasikan Solusi</h4>
+                            <p class="text-gray-700 mb-4">Tahap menerjemahkan algoritma ke dalam bahasa pemrograman yang dipilih.</p>
+                            <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                                <h5 class="font-semibold text-green-800 mb-2">Pertimbangan utama:</h5>
+                                <ul class="text-gray-700 space-y-1 text-sm">
+                                    <li>• <strong>Pemilihan Bahasa:</strong> Sesuai kebutuhan dan performa</li>
+                                    <li>• <strong>Library & Framework:</strong> Memanfaatkan tools yang ada</li>
+                                    <li>• <strong>Code Quality:</strong> Keterbacaan dan maintainability</li>
+                                    <li>• <strong>Error Handling:</strong> Antisipasi kemungkinan error</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `,
+                    color: "border-green-500"
+                },
+                4: {
+                    title: "🧪 Tahap Testing",
+                    content: `
+                        <div class="text-left">
+                            <h4 class="text-xl font-bold text-purple-700 mb-4">Menguji Program</h4>
+                            <p class="text-gray-700 mb-4">Tahap memverifikasi bahwa program berjalan sesuai spesifikasi dan bebas dari bug.</p>
+                            <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                                <h5 class="font-semibold text-purple-800 mb-2">Jenis testing yang dilakukan:</h5>
+                                <ul class="text-gray-700 space-y-1 text-sm">
+                                    <li>• <strong>Unit Testing:</strong> Menguji komponen individual</li>
+                                    <li>• <strong>Integration Testing:</strong> Menguji interaksi antar komponen</li>
+                                    <li>• <strong>User Acceptance Testing:</strong> Validasi dari perspektif pengguna</li>
+                                    <li>• <strong>Performance Testing:</strong> Menguji kecepatan dan efisiensi</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `,
+                    color: "border-purple-500"
+                }
+            };
+
+            const step = steps[stepNumber];
+            stepDetails.innerHTML = `
+                <div class="text-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-800">${step.title}</h3>
+                </div>
+                ${step.content}
+            `;
+            stepDetails.className = `bg-white p-6 rounded-xl border-2 ${step.color}`;
+        }
+
+        // Triangle analysis function
+        function analyzeTriangle() {
+            const a = parseFloat(document.getElementById('sideA').value);
+            const b = parseFloat(document.getElementById('sideB').value);
+            const c = parseFloat(document.getElementById('sideC').value);
+            
+            const resultDiv = document.getElementById('triangleResult');
+            const visualDiv = document.getElementById('triangleVisualization');
+            
+            // Validation
+            if (isNaN(a) || isNaN(b) || isNaN(c) || a <= 0 || b <= 0 || c <= 0) {
+                resultDiv.innerHTML = `
+                    <div class="text-6xl mb-4">❌</div>
+                    <div class="text-xl font-bold mb-2 text-red-300">Input Tidak Valid!</div>
+                    <div class="text-white/80">Semua nilai sisi harus berupa bilangan positif</div>
+                `;
+                visualDiv.innerHTML = '';
+                return;
+            }
+            
+            // Triangle inequality check
+            if (a + b <= c || a + c <= b || b + c <= a) {
+                resultDiv.innerHTML = `
+                    <div class="text-6xl mb-4">⚠️</div>
+                    <div class="text-xl font-bold mb-2 text-yellow-300">Bukan Segitiga Valid!</div>
+                    <div class="text-white/80">Tidak memenuhi ketentuan segitiga</div>
+                `;
+                visualDiv.innerHTML = '';
+                return;
+            }
+            
+            // Classify triangle
+            let result, icon, color, description;
+            
+            if (a === b && b === c) {
+                result = "Segitiga Sama Sisi";
+                icon = "🔺";
+                color = "text-green-300";
+                description = "Ketiga sisi memiliki panjang yang sama";
+            } else if (a === b || b === c || a === c) {
+                result = "Segitiga Sama Kaki";
+                icon = "📐";
+                color = "text-blue-300";
+                description = "Dua sisi memiliki panjang yang sama";
+            } else {
+                result = "Segitiga Sembarang";
+                icon = "📏";
+                color = "text-yellow-300";
+                description = "Ketiga sisi memiliki panjang yang berbeda";
+            }
+            
+            resultDiv.innerHTML = `
+                <div class="text-6xl mb-4">${icon}</div>
+                <div class="text-2xl font-bold mb-2 ${color}">${result}</div>
+                <div class="text-white/80 mb-2">${description}</div>
+                <div class="text-sm text-white/60">Sisi: ${a}, ${b}, ${c}</div>
+            `;
+            
+            // Create triangle visualization with proper geometry and scaling
+            const maxSide = Math.max(a, b, c);
+            const minSide = Math.min(a, b, c);
+            
+            // Dynamic scaling to fit in viewport (max 120px for largest side)
+            const targetMaxSize = 120;
+            const scale = targetMaxSize / maxSide;
+            
+            // Use law of cosines to calculate angles and positions
+            // Place side 'a' as the base (horizontal)
+            const baseLength = a * scale;
+            const sideB = b * scale;
+            const sideC = c * scale;
+            
+            // Center the triangle in a 200x150 viewport
+            const centerX = 100;
+            const baseY = 110; // Move up a bit to center better
+            const x1 = centerX - baseLength / 2;  // Left vertex (A)
+            const y1 = baseY;
+            const x2 = centerX + baseLength / 2;  // Right vertex (B)
+            const y2 = baseY;
+            
+            // Calculate angle at vertex A using law of cosines
+            // cos(A) = (b² + c² - a²) / (2bc)
+            const cosA = (sideB * sideB + baseLength * baseLength - sideC * sideC) / (2 * sideB * baseLength);
+            const angleA = Math.acos(Math.max(-1, Math.min(1, cosA)));
+            
+            // Calculate third vertex (C) position
+            const x3 = x1 + sideB * Math.cos(angleA);
+            const y3 = y1 - sideB * Math.sin(angleA);
+            
+            // Ensure triangle fits in viewport by adjusting if needed
+            const minY = Math.min(y1, y2, y3);
+            const maxY = Math.max(y1, y2, y3);
+            const minX = Math.min(x1, x2, x3);
+            const maxX = Math.max(x1, x2, x3);
+            
+            // Calculate offset to center the triangle if it's off-center
+            let offsetX = 0;
+            let offsetY = 0;
+            
+            if (minX < 10) offsetX = 10 - minX;
+            if (maxX > 190) offsetX = 190 - maxX;
+            if (minY < 10) offsetY = 10 - minY;
+            if (maxY > 140) offsetY = 140 - maxY;
+            
+            // Apply offsets
+            const finalX1 = x1 + offsetX;
+            const finalY1 = y1 + offsetY;
+            const finalX2 = x2 + offsetX;
+            const finalY2 = y2 + offsetY;
+            const finalX3 = x3 + offsetX;
+            const finalY3 = y3 + offsetY;
+            
+            visualDiv.innerHTML = `
+                <div class="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                    <h4 class="text-white font-semibold mb-2 text-center">Visualisasi Segitiga</h4>
+                    <svg width="200" height="150" viewBox="0 0 200 150" class="mx-auto border border-white/20 rounded">
+                        <!-- Grid background -->
+                        <defs>
+                            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+                            </pattern>
+                        </defs>
+                        <rect width="200" height="150" fill="url(#grid)" opacity="0.3"/>
+                        
+                        <!-- Triangle -->
+                        <polygon points="${finalX1},${finalY1} ${finalX2},${finalY2} ${finalX3},${finalY3}" 
+                                fill="rgba(255,255,255,0.2)" 
+                                stroke="white" 
+                                stroke-width="2"
+                                stroke-linejoin="round"/>
+                        
+                        <!-- Vertices (corner points) -->
+                        <circle cx="${finalX1}" cy="${finalY1}" r="3" fill="white" stroke="rgba(255,255,255,0.8)" stroke-width="1"/>
+                        <circle cx="${finalX2}" cy="${finalY2}" r="3" fill="white" stroke="rgba(255,255,255,0.8)" stroke-width="1"/>
+                        <circle cx="${finalX3}" cy="${finalY3}" r="3" fill="white" stroke="rgba(255,255,255,0.8)" stroke-width="1"/>
+                        
+                        <!-- Side labels with better positioning -->
+                        <text x="${(finalX1 + finalX2) / 2}" y="${(finalY1 + finalY2) / 2 + 15}" text-anchor="middle" fill="white" font-size="10" font-weight="bold" 
+                              stroke="rgba(0,0,0,0.5)" stroke-width="2" paint-order="stroke">a=${a}</text>
+                        
+                        <text x="${(finalX2 + finalX3) / 2 + 12}" y="${(finalY2 + finalY3) / 2}" text-anchor="middle" fill="white" font-size="10" font-weight="bold"
+                              stroke="rgba(0,0,0,0.5)" stroke-width="2" paint-order="stroke">c=${c}</text>
+                        
+                        <text x="${(finalX1 + finalX3) / 2 - 12}" y="${(finalY1 + finalY3) / 2}" text-anchor="middle" fill="white" font-size="10" font-weight="bold"
+                              stroke="rgba(0,0,0,0.5)" stroke-width="2" paint-order="stroke">b=${b}</text>
+                        
+                        <!-- Vertex labels -->
+                        <text x="${finalX1 - 8}" y="${finalY1 + 12}" text-anchor="middle" fill="white" font-size="9" font-weight="bold">A</text>
+                        <text x="${finalX2 + 8}" y="${finalY2 + 12}" text-anchor="middle" fill="white" font-size="9" font-weight="bold">B</text>
+                        <text x="${finalX3}" y="${finalY3 - 8}" text-anchor="middle" fill="white" font-size="9" font-weight="bold">C</text>
+                    </svg>
+                    <div class="text-center mt-2">
+                        <span class="text-white/80 text-xs">Skala: 1 unit = ${(1/scale).toFixed(1)} px • Geometri akurat</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Quiz functionality
+        const quizQuestions = [
+            {
+                question: "Seorang programmer sedang mengembangkan sistem e-learning. Pada tahap analisis, ia menemukan bahwa requirement dari klien tidak jelas dan saling bertentangan. Langkah yang PALING TEPAT untuk dilakukan adalah:",
+                options: [
+                    "Langsung membuat asumsi sendiri dan melanjutkan ke tahap desain",
+                    "Menggunakan requirement yang paling mudah diimplementasikan",
+                    "Melakukan requirement gathering ulang dengan stakeholder untuk klarifikasi",
+                    "Membuat prototype sederhana berdasarkan pemahaman sementara",
+                    "Menunda proyek hingga klien memberikan requirement yang lengkap"
+                ],
+                correct: 2,
+                explanation: "Tahap analisis yang baik memerlukan requirement yang jelas dan tidak ambigu. Ketika ada ketidakjelasan, langkah terbaik adalah melakukan requirement gathering ulang dengan stakeholder untuk memastikan pemahaman yang sama dan menghindari kesalahan di tahap selanjutnya."
+            },
+            {
+                question: "Dalam mengembangkan algoritma untuk sistem rekomendasi produk, seorang programmer membuat tiga versi algoritma: collaborative filtering, content-based filtering, dan hybrid approach. Ia kemudian membuat pseudocode untuk ketiga pendekatan tersebut. Mengapa pendekatan multiple algorithm design ini penting dalam tahap problem solving?",
+                options: [
+                    "Untuk menunjukkan kemampuan teknis kepada atasan",
+                    "Karena setiap algoritma memiliki trade-off yang berbeda dalam hal akurasi, performa, dan kompleksitas",
+                    "Untuk memperpanjang waktu development dan mendapat bayaran lebih",
+                    "Karena tidak yakin algoritma mana yang benar",
+                    "Untuk memenuhi standar dokumentasi perusahaan"
+                ],
+                correct: 1,
+                explanation: "Multiple algorithm design memungkinkan evaluasi berbagai pendekatan dengan trade-off yang berbeda. Collaborative filtering bagus untuk user dengan preferensi serupa, content-based cocok untuk item dengan metadata kaya, dan hybrid menggabungkan keunggulan keduanya. Ini membantu memilih solusi optimal berdasarkan konteks spesifik."
+            },
+            {
+                question: "Sebuah tim mengembangkan aplikasi mobile banking. Setelah tahap coding selesai, mereka menemukan bahwa aplikasi berjalan lambat saat memproses transaksi dengan jumlah besar, meskipun algoritma yang digunakan sudah optimal. Analisis masalah ini menunjukkan bahwa kemungkinan terjadi kegagalan pada tahap:",
+                options: [
+                    "Analyzing - constraint performa tidak didefinisikan dengan jelas",
+                    "Problem Solving - algoritma yang dipilih tidak scalable",
+                    "Coding - implementasi tidak efisien atau pilihan teknologi tidak tepat",
+                    "Testing - tidak melakukan performance testing yang memadai",
+                    "Semua tahap berkontribusi pada masalah ini"
+                ],
+                correct: 4,
+                explanation: "Masalah performa yang kompleks biasanya merupakan hasil dari kegagalan di multiple tahap: analisis tidak mendefinisikan performance requirement dengan jelas, desain algoritma mungkin tidak mempertimbangkan scalability, implementasi bisa tidak optimal, dan testing tidak menguji performa sesuai requirement produksi."
+            },
+            {
+                question: "Dalam studi kasus identifikasi segitiga, jika kita ingin mengembangkan program yang tidak hanya mengklasifikasi jenis segitiga tetapi juga menghitung luas dan kelilingnya, perubahan PALING SIGNIFIKAN akan terjadi pada tahap:",
+                options: [
+                    "Analyzing - karena output specification berubah drastis",
+                    "Problem Solving - karena algoritma menjadi lebih kompleks",
+                    "Coding - karena perlu menambah fungsi matematika",
+                    "Testing - karena test case bertambah banyak",
+                    "Semua tahap akan berubah secara proporsional"
+                ],
+                correct: 0,
+                explanation: "Perubahan paling signifikan terjadi di tahap Analyzing karena output specification berubah drastis dari hanya klasifikasi menjadi klasifikasi + perhitungan numerik. Ini memerlukan redefinisi problem statement, constraint baru (validasi input untuk perhitungan), dan spesifikasi output yang lebih kompleks."
+            },
+            {
+                question: "Seorang senior developer mengatakan: 'Testing yang baik bukan hanya memastikan program bebas bug, tetapi juga memvalidasi bahwa solusi benar-benar menyelesaikan masalah bisnis yang didefinisikan di awal.' Dalam konteks proses pemrograman, pernyataan ini menekankan pentingnya:",
+                options: [
+                    "Comprehensive test coverage untuk semua line of code",
+                    "Automated testing untuk efisiensi development",
+                    "Traceability matrix antara business requirement dan test case",
+                    "Performance testing untuk memastikan scalability",
+                    "User acceptance testing untuk kepuasan end user"
+                ],
+                correct: 2,
+                explanation: "Pernyataan ini menekankan pentingnya traceability matrix - kemampuan untuk melacak setiap business requirement kembali ke test case yang memvalidasinya. Ini memastikan bahwa testing tidak hanya mencari bug teknis, tetapi juga memverifikasi bahwa solusi memenuhi kebutuhan bisnis yang didefinisikan di tahap analisis."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        let quizCompleted = false;
+
+        function loadQuestion() {
+            const question = quizQuestions[currentQuestionIndex];
+            const container = document.getElementById('question-container');
+            
+            container.innerHTML = `
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 p-8 rounded-xl mb-6 border border-gray-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 leading-relaxed">
+                        ${question.question}
+                    </h3>
+                    <div class="space-y-4">
+                        ${question.options.map((option, index) => `
+                            <label class="quiz-option flex items-start space-x-4 p-4 rounded-xl border-2 border-gray-200 cursor-pointer transition-all duration-300">
+                                <input type="radio" name="answer" value="${index}" class="mt-1 text-blue-600 focus:ring-blue-500 w-4 h-4">
+                                <span class="text-gray-700 leading-relaxed">
+                                    <span class="font-semibold text-blue-600">${String.fromCharCode(65 + index)}.</span> ${option}
+                                </span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Update progress
+            document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+            document.getElementById('progress-bar').style.width = `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`;
+            
+            // Update buttons
+            document.getElementById('prev-btn').disabled = currentQuestionIndex === 0;
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.textContent = currentQuestionIndex === quizQuestions.length - 1 ? 'Selesai 🎯' : 'Selanjutnya →';
+            
+            // Restore previous answer if exists
+            if (userAnswers[currentQuestionIndex] !== undefined) {
+                const radio = document.querySelector(`input[value="${userAnswers[currentQuestionIndex]}"]`);
+                if (radio) {
+                    radio.checked = true;
+                    radio.closest('.quiz-option').classList.add('selected');
+                }
+            }
+
+            // Add event listeners for radio buttons
+            const radioButtons = document.querySelectorAll('input[name="answer"]');
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // Remove selected class from all options
+                    document.querySelectorAll('.quiz-option').forEach(option => {
+                        option.classList.remove('selected');
+                    });
+                    // Add selected class to chosen option
+                    this.closest('.quiz-option').classList.add('selected');
+                });
+            });
+        }
+
+        function nextQuestion() {
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+            
+            if (!selectedAnswer) {
+                alert('Silakan pilih jawaban terlebih dahulu!');
+                return;
+            }
+            
+            userAnswers[currentQuestionIndex] = parseInt(selectedAnswer.value);
+            
+            if (currentQuestionIndex === quizQuestions.length - 1) {
+                finishQuiz();
+            } else {
+                currentQuestionIndex++;
+                loadQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            // Calculate score
+            score = 0;
+            for (let i = 0; i < quizQuestions.length; i++) {
+                if (userAnswers[i] === quizQuestions[i].correct) {
+                    score++;
+                }
+            }
+            
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('score').textContent = score;
+            
+            const percentage = (score / quizQuestions.length) * 100;
+            document.getElementById('score-percentage').textContent = `Persentase: ${percentage}%`;
+            
+            let message = '';
+            if (score === 5) {
+                message = '🌟 Luar biasa! Anda menguasai konsep proses pemrograman dengan sempurna! Pemahaman HOTS Anda sangat baik.';
+            } else if (score >= 4) {
+                message = '👏 Sangat bagus! Anda memiliki pemahaman yang solid tentang proses pemrograman. Sedikit lagi untuk sempurna!';
+            } else if (score >= 3) {
+                message = '👍 Cukup baik! Anda memahami konsep dasar, namun masih perlu memperdalam pemahaman tentang aplikasi praktis.';
+            } else if (score >= 2) {
+                message = '📚 Perlu belajar lebih lanjut. Fokus pada pemahaman hubungan antar tahap dalam proses pemrograman.';
+            } else {
+                message = '💪 Jangan menyerah! Silakan pelajari materi lagi dan coba kuis sekali lagi. Setiap usaha adalah langkah menuju pemahaman yang lebih baik.';
+            }
+            
+            document.getElementById('score-message').textContent = message;
+            quizCompleted = true;
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+            quizCompleted = false;
+            
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('score').textContent = '0';
+            
+            loadQuestion();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default active section
+            const firstNavBtn = document.querySelector('.nav-btn');
+            firstNavBtn.classList.add('bg-gradient-to-r', 'from-blue-600', 'to-purple-600', 'text-white', 'shadow-lg');
+            
+            // Initialize quiz
+            loadQuestion();
+            
+            // Auto-analyze triangle on input change
+            ['sideA', 'sideB', 'sideC'].forEach(id => {
+                document.getElementById(id).addEventListener('input', analyzeTriangle);
+            });
+            
+            // Initial triangle analysis
+            analyzeTriangle();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'986f62a053276097',t:'MTc1OTE4OTg1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
